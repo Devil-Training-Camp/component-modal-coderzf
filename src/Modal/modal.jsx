@@ -1,5 +1,14 @@
+/*
+ * @Description:
+ * @Version: 2.0
+ * @Autor: Seven
+ * @Date: 2023-05-29 10:57:55
+ * @LastEditors: Seven
+ * @LastEditTime: 2023-05-31 11:02:12
+ */
 import React, { useState } from "react";
 import NewProtal from "../newProtal/newProtal";
+import { CloseOutlined } from "@ant-design/icons";
 import "./modal.css";
 export default function Modal(props) {
   const {
@@ -46,19 +55,40 @@ export default function Modal(props) {
     visibleModal && (
       <NewProtal>
         <div className="modal-wrapper">
-          <div className="modal">
+          <div className="modal" style={{ width: width }}>
             <div className="modal-title">{title ? title : "标题"}</div>
+            {closeable && (
+              <span className="modal-Icon">
+                {closeIcon || <CloseOutlined />}
+              </span>
+            )}
             <div className="modal-content">{children ? children : "内容"}</div>
-            <div className="modal-operator">
-              <button className="modal-operator-close" onClick={closeModal}>
-                取消
-              </button>
-              <button className="modal-operator-confim" onClick={onConfim}>
-                确认
-              </button>
-            </div>
+            {footer === null ? null : (
+              <div>
+                {footer ? (
+                  footer
+                ) : (
+                  <div className="modal-operator">
+                    <button
+                      className="modal-operator-close"
+                      onClick={closeModal}
+                    >
+                      {cancelText}
+                    </button>
+                    <button
+                      className="modal-operator-confim"
+                      onClick={onConfim}
+                    >
+                      {okText}
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
-          <div className="mask" onClick={maskClick}></div>
+          {mask && (
+            <div className="mask" style={maskStyle} onClick={maskClick}></div>
+          )}
         </div>
       </NewProtal>
     )

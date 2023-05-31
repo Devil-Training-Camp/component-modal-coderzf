@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Modal from "./Modal/modal.jsx";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 import "./App.css";
 function App() {
   const [visible, setVisible] = useState(false);
@@ -23,6 +24,14 @@ function App() {
           title="这里是自定义的title"
           confirm={confirm}
           onClose={closeModal}
+          width="800px"
+          okText={"确定1"}
+          cancelText={"取消1"}
+          closeable={true}
+          closeIcon={<ExclamationCircleOutlined />}
+          footer={false}
+          // maskStyle={{ backgroundColor: "yellow" }}
+          mask={true}
         >
           {/* <h1> 这里是content内容，哈哈哈</h1> */}
           这里是content内容，哈哈哈
