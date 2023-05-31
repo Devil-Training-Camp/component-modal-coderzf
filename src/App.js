@@ -15,6 +15,9 @@ function App() {
     console.log("我是onClose回调");
     setVisible(false);
   };
+  const afterCloseFun = () => {
+    console.log("你只有在关闭的时候才会想起我+++++");
+  };
   return (
     <div className="app">
       <button onClick={showModal}>点击这里打开Modal</button>
@@ -28,10 +31,12 @@ function App() {
           okText={"确定1"}
           cancelText={"取消1"}
           closeable={true}
-          closeIcon={<ExclamationCircleOutlined />}
+          // closeIcon={<ExclamationCircleOutlined />}
           footer={false}
           // maskStyle={{ backgroundColor: "yellow" }}
           mask={true}
+          centered
+          afterClose={afterCloseFun}
         >
           {/* <h1> 这里是content内容，哈哈哈</h1> */}
           这里是content内容，哈哈哈

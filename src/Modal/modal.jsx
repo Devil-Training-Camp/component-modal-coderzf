@@ -4,12 +4,14 @@
  * @Autor: Seven
  * @Date: 2023-05-29 10:57:55
  * @LastEditors: Seven
- * @LastEditTime: 2023-05-31 11:02:12
+ * @LastEditTime: 2023-05-31 15:39:17
  */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NewProtal from "../newProtal/newProtal";
 import { CloseOutlined } from "@ant-design/icons";
 import "./modal.css";
+// 使用闭包实现afterClose
+let hiddenCount = 0;
 export default function Modal(props) {
   const {
     visible, //bool Modal控制显隐
@@ -34,7 +36,30 @@ export default function Modal(props) {
   } = props;
   const [visibleModal, setVisibleModal] = useState(visible);
   //    首次渲染使用父组件的状态更新modal中的visible状态，只调用一次
-  console.log("哈哈哈———————", visible, title, children);
+
+  const EscCloseModal = () => {
+    document.onkeydown = (event) => {
+      let e = event || window.event || arguments.callee.caller.arguments[0];
+      if (e && e.keyCode === 27) {
+        closeModal();
+      }
+    };
+  };
+  useEffect(() => {
+    document.addEventListener("keydown", EscCloseModal, false);
+    return () => {
+      document.removeEventListener("keydown", EscCloseModal, false);
+    };
+  }, []);
+  // useEffect(() => {
+  //   console.log("visible+++++1", visible, visibleModal, hiddenCount);
+  //   if (visibleModal && hiddenCount) {
+  //     hiddenCount = 0;
+  //     afterClose && afterClose();
+  //     console.log("visible+++++2", visible, visibleModal, hiddenCount);
+  //   }
+  //   hiddenCount = 1;
+  // }, [visibleModal]);
   const closeModal = () => {
     console.log("大家好，我叫取消，听说你们想点我？傲娇脸👸");
     onClose && onClose();
@@ -52,45 +77,48 @@ export default function Modal(props) {
     setVisibleModal(false);
   };
   return (
-    visibleModal && (
-      <NewProtal>
-        <div className="modal-wrapper">
-          <div className="modal" style={{ width: width }}>
-            <div className="modal-title">{title ? title : "标题"}</div>
-            {closeable && (
-              <span className="modal-Icon">
-                {closeIcon || <CloseOutlined />}
-              </span>
-            )}
-            <div className="modal-content">{children ? children : "内容"}</div>
-            {footer === null ? null : (
-              <div>
-                {footer ? (
-                  footer
-                ) : (
-                  <div className="modal-operator">
-                    <button
-                      className="modal-operator-close"
-                      onClick={closeModal}
-                    >
-                      {cancelText}
-                    </button>
-                    <button
-                      className="modal-operator-confim"
-                      onClick={onConfim}
-                    >
-                      {okText}
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-          {mask && (
-            <div className="mask" style={maskStyle} onClick={maskClick}></div>
+    <NewProtal>
+      <div
+        className="modal-wrapper"
+        style={{ display: visibleModal ? "block" : "none" }}
+      >
+        <div
+          className={`modal ${centered ? "centerModal" : ""}`}
+          style={{ width: width }}
+        >
+          <div className="modal-title">{title ? title : "标题"}</div>
+          {closeable && (
+            <span
+              className="modal-Icon"
+              onClick={() => {
+                maskClick();
+              }}
+            >
+              {closeIcon || <CloseOutlined />}
+            </span>
+          )}
+          <div className="modal-content">{children ? children : "内容"}</div>
+          {footer === null ? null : (
+            <div>
+              {footer ? (
+                footer
+              ) : (
+                <div className="modal-operator">
+                  <button className="modal-operator-close" onClick={closeModal}>
+                    {cancelText}
+                  </button>
+                  <button className="modal-operator-confim" onClick={onConfim}>
+                    {okText}
+                  </button>
+                </div>
+              )}
+            </div>
           )}
         </div>
-      </NewProtal>
-    )
+        {mask && (
+          <div className="mask" style={maskStyle} onClick={maskClick}></div>
+        )}
+      </div>
+    </NewProtal>
   );
 }
